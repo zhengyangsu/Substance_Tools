@@ -201,6 +201,45 @@ Item {
           }
        }
 
+        Item {
+          id: createChanel
+          anchors.left: parent.left
+          anchors.leftMargin: 5
+          y:255
+          
+           Button {
+            id: customChanel   
+            style: ButtonStyle {
+                background: Rectangle {
+                    implicitWidth: 100
+                    implicitHeight: 25
+                    anchors.top : parent.top
+                    anchors.topMargin : 2
+                    anchors.left : parent.left
+                    anchors.leftMargin : 0
+            
+                    border.width: 1
+                    border.color: "#141414"
+                    radius: 2
+                    gradient: Gradient {
+                    GradientStop { position: 0 ; color: control.pressed ? "#565656" : "#494949" }
+                    //GradientStop { position: 0 ; color: control.hovered ? "grey" : "black" }   
+                    }
+                 }
+                label: Text {
+                    color: "white"
+                    text: "Add User Channel"
+                    anchors.leftMargin : 10
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignBottom 
+               } 
+            }
+            
+            onClicked: {
+                Export.addCustomChannels()
+            }
+          }
+       }
       
       ListModel {
         id: documentStructureModel
@@ -212,16 +251,15 @@ Item {
           alg.log.info("model length count: " + temp.count)
 
           for (var key in temp){
-            alg.log.info("temp: " + temp[key])
+            alg.log.info("temp: " + temp[key]["udim"] + " " + temp[key]["isChecked"])
             documentStructureModel.append(temp[key])
             alg.log.info("documentStructureModel: " + documentStructureModel[key])
           }
         }
       }
 
-
       ColumnLayout {
-        y:260
+        y:295
         anchors.left: parent.left
         anchors.leftMargin: 5
 
@@ -288,72 +326,71 @@ Item {
                     verticalAlignment: Text.AlignBottom 
                } 
               }
-            }
-
-
-          
+            }         
         }
 
 
-        Repeater {
-          model: documentStructureModel
-          RowLayout{
-            id: rowItem
-            spacing: 12
-            property alias checked: modelCheckBox.checked
-            signal clicked()
+        AlgScrollView {
+          id:  scrollView
+          width: 125
+          height: 300
+          Column {
+                Repeater {
+                  model: documentStructureModel
+                  RowLayout{
+                    id: rowItem
+                    spacing: 12
+                    property alias checked: modelCheckBox.checked
+                    signal clicked()
 
-            AlgCheckBox {
+                    AlgCheckBox {
 
-              id: modelCheckBox
-              checked: true
-              Layout.preferredWidth: height
-              
+                      id: modelCheckBox
+                      checked: true
+                      Layout.preferredWidth: height
+                      
 
 
-              onCheckedChanged: {
-              Export.toggleExportList(udim);
-              }
+                      onCheckedChanged: {
+                      Export.toggleExportList(udim);
+                      }
 
-              onClicked: {
-                rowItem.clicked()
-              }
+                      onClicked: {
+                        rowItem.clicked()
+                      }
 
-              Connections {
-                target: noneButton
-                onClicked: {
-                   checked = false
+                      Connections {
+                        target: noneButton
+                        onClicked: {
+                           checked = false
+                        }
+                      }
+
+                      Connections {
+                        target: allButton
+                        onClicked: {
+                           checked = true
+                        }
+                      }
+
+                    }
+
+                    AlgTextEdit {
+                      readOnly: true
+                      borderActivated: true
+                      borderOpacity: 0.3
+                      Layout.fillWidth: true
+                      text: udim
+                    }
+                  
+                  }
                 }
-              }
-
-              Connections {
-                target: allButton
-                onClicked: {
-                   checked = true
-                }
-              }
-
-            }
-
-            AlgTextEdit {
-              readOnly: true
-              borderActivated: true
-              borderOpacity: 0.3
-              Layout.fillWidth: true
-              text: udim
-            }
-          
           }
-        }
+}
 
 
 
+      }
 
-
-
-
-
-
-    }
   }   
 }

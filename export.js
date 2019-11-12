@@ -21,6 +21,7 @@ var udims = {};
 var structure = "";
 var resources = "";
 var numOfUdim  = 0;
+var customChannelsCount = 0;
 
 //Log to console
 function log(msg, mode) {
@@ -67,6 +68,7 @@ function setValues(){
   format = "tiff";
   preSet = "PBR MetalRough";
   depth = 16;
+  customChannelsCount = 0;
 }
 
 
@@ -99,20 +101,20 @@ function genExportUdimList(){
 
 
 
-function toggleExportList(udim){
+function toggleExportList(key){
 
   alg.log.info("toggle");
 
-  if (udims[udim]["isChecked"] == true){
-    udims[udim]["isChecked"] =  false;
+  if (udims[key]["isChecked"] == true){
+    udims[key]["isChecked"] =  false;
     
   }else{
 
-    udims[udim]["isChecked"] = true;
+    udims[key]["isChecked"] = true;
 
   }
-  alg.log.info("udim: " + udims[udim][udim]);
-  alg.log.info("isChecked: " + udims[udim]["isChecked"]);
+  alg.log.info("udim: " + udims[key]["udim"]);
+  alg.log.info("isChecked: " + udims[key]["isChecked"]);
 
 }
 
@@ -178,4 +180,19 @@ function exportTex() {
 }
 
 
+function addCustomChannels(){
+  //two consideration
+  //first max user channels is 8 from 0 to 7
+  //second channel name and bitdepth
+  if (customChannelsCount < 8) {
+    for (var m in structure.materials){
+      var textureSet = structure.materials[m]["name"];
+      var chanelName = "user" + customChannelsCount;
+      alg.texturesets.addChannel(textureSet, chanelName, "L16F");
+    }
+    customChannelsCount++;
+  }else {
+    alg.log.warn("max custom user channel reached, self-destruction in 3 seconds.");
+  }
 
+}
