@@ -14,10 +14,11 @@ PainterPlugin {
                 // Called after the object has been instantiated.
                 // This can be used to execute script code at startup,
                 // once the full QML environment has been established.
+                Export.init()
                 var button = alg.ui.addToolBarWidget("button.qml")//add a button to toolbar
                 var dockWidget = alg.ui.addDockWidget("dockWidget.qml")//add dock widget
-                Export.log("Channel Export Plugin has been created", "info")
-                Export.init()
+                Export.setValues()
+                Export.log("The God Emperor Protects!", "Channel Export Plugin has been created", "info")
                 alg.log.info("Component.onCompleted")
         }
 
