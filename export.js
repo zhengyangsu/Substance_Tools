@@ -21,7 +21,7 @@ var udims = {};
 var structure = "";
 var resources = "";
 var numOfUdim  = 0;
-var customChannelsCount = 0;
+var customChannel= "User0";
 
 //Log to console
 function log(msg, mode) {
@@ -65,10 +65,10 @@ function setValues(){
   res = "Document Resolution";
   docSize = [1024, 1024];
   dir = "C:/Users/ZHENG/Documents/Allegorithmic/Substance Painter/export/test";
-  format = "tiff";
+  format = "png";
   preSet = "PBR MetalRough";
   depth = 16;
-  customChannelsCount = 0;
+  customChannel = "User0";
 }
 
 
@@ -180,19 +180,49 @@ function exportTex() {
 }
 
 
-function addCustomChannels(){
+function addCustomChannel(){
   //two consideration
   //first max user channels is 8 from 0 to 7
   //second channel name and bitdepth
-  if (customChannelsCount < 8) {
-    for (var m in structure.materials){
-      var textureSet = structure.materials[m]["name"];
-      var chanelName = "user" + customChannelsCount;
-      alg.texturesets.addChannel(textureSet, chanelName, "L16F");
-    }
-    customChannelsCount++;
-  }else {
-    alg.log.warn("max custom user channel reached, self-destruction in 3 seconds.");
-  }
 
+  for (var key in udims){
+    if(udims[key]["isChecked"]){
+      try {
+        var textureSet = udims[key]["udim"];
+        //var chanelName = "user" + customChannel;
+        alg.texturesets.addChannel(textureSet, customChannel, "L16F");
+      }
+      catch (error) {
+        log(error, "error");
+      }
+      
+    }
+  }
 }
+
+function removeCustomChannel(){
+  //two consideration
+  //first max user channels is 8 from 0 to 7
+  //second channel name and bitdepth
+
+  for (var key in udims){
+    if(udims[key]["isChecked"]){
+      try {
+        var textureSet = udims[key]["udim"];
+        //var chanelName = "user" + customChannel;
+        alg.texturesets.removeChannel(textureSet, customChannel, "L16F");
+      }
+      catch (error) {
+        log(error, "error");
+      }
+      
+    }
+  }
+}
+
+
+//<static> channelIdentifiers( [stackPath])
+//<static> removeChannel(textureSetName, type)
+//<static> editChannel(stackPath, type, format [, label])
+//Namespace: texturesets
+//Namespace: mapexport

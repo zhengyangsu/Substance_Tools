@@ -142,13 +142,53 @@ Item {
         }
 
 // file dialog - Export Maps 
-        Item {
-          id: browse
-          anchors.left: parent.left
-          anchors.leftMargin: 5
-          y:215
-          
-           Button {
+
+      ColumnLayout {
+        y:215
+        anchors.left: parent.left
+        anchors.leftMargin: 5
+
+        RowLayout {
+          id: exporters
+          anchors.top: parent.top
+          anchors.left: parent.left; anchors.right: parent.right
+          spacing: 6
+          layoutDirection: Qt.RightToLeft
+
+          Button {
+            id: exportMaps   
+            style: ButtonStyle {
+                background: Rectangle {
+                    implicitWidth: 100
+                    implicitHeight: 25
+                    anchors.top : parent.top
+                    anchors.topMargin : 2
+                    anchors.left : parent.left
+                    anchors.leftMargin : 0
+            
+                    border.width: 1
+                    border.color: "#141414"
+                    radius: 2
+                    gradient: Gradient {
+                    GradientStop { position: 0 ; color: control.pressed ? "#565656" : "#494949" }
+                    //GradientStop { position: 0 ; color: control.hovered ? "grey" : "black" }   
+                    }
+                 }
+                label: Text {
+                    color: "white"
+                    text: "Export"
+                    anchors.leftMargin : 10
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignBottom 
+               } 
+              }
+            
+            onClicked: {
+                Export.exportTex();
+            }
+          }
+
+          Button {
             id: directory   
             style: ButtonStyle {
                 background: Rectangle {
@@ -199,16 +239,55 @@ Item {
                 fileDialog.open()
             }
           }
-       }
 
-        Item {
-          id: createChanel
-          anchors.left: parent.left
-          anchors.leftMargin: 5
-          y:255
+       
+        }
+      }
+
           
+
+      Item {
+               id: userChannels
+               anchors.left: parent.left
+               anchors.leftMargin: 5
+               y: 255
+                          
+                  Text {
+                    id:userChannel
+                     text: "custom user channel"
+                    color: "white"
+                              
+                       ComboBox {
+                         id: customChannel
+                         currentIndex: 0
+                         anchors.left: parent.left
+                         anchors.top: parent.bottom
+                         width: 200
+                          model: [ "User0", "User1", "User2", "User3", "User4", "User5", "User6", "User7" ]
+                          
+                           onCurrentIndexChanged: {
+                             Export.customChannel = customChannel.textAt(currentIndex)
+                         }
+                       }
+                  }
+      }
+
+      ColumnLayout {
+        y:295
+        anchors.left: parent.left
+        anchors.leftMargin: 5
+
+        RowLayout {
+          id: customChannels
+          anchors.top: parent.top
+          anchors.left: parent.left; anchors.right: parent.right
+          spacing: 6
+          layoutDirection: Qt.RightToLeft
+
+
+            
            Button {
-            id: customChanel   
+            id: addCustomChanel   
             style: ButtonStyle {
                 background: Rectangle {
                     implicitWidth: 100
@@ -228,19 +307,59 @@ Item {
                  }
                 label: Text {
                     color: "white"
-                    text: "Add User Channel"
+                    text: "add"
                     anchors.leftMargin : 10
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignBottom 
                } 
-            }
+              }
             
             onClicked: {
-                Export.addCustomChannels()
+                Export.addCustomChannel()
             }
           }
-       }
+        
+
+
+          
+           Button {
+            id: removeCustomChanel   
+            style: ButtonStyle {
+                background: Rectangle {
+                    implicitWidth: 100
+                    implicitHeight: 25
+                    anchors.top : parent.top
+                    anchors.topMargin : 2
+                    anchors.left : parent.left
+                    anchors.leftMargin : 0
+            
+                    border.width: 1
+                    border.color: "#141414"
+                    radius: 2
+                    gradient: Gradient {
+                    GradientStop { position: 0 ; color: control.pressed ? "#565656" : "#494949" }
+                    //GradientStop { position: 0 ; color: control.hovered ? "grey" : "black" }   
+                    }
+                 }
+                label: Text {
+                    color: "white"
+                    text: "remove"
+                    anchors.leftMargin : 10
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignBottom 
+               } 
+              }
+            
+            onClicked: {
+                Export.removeCustomChannel()
+            }
+          }
+          
+
+        }
+      }  
       
+
       ListModel {
         id: documentStructureModel
 
@@ -259,7 +378,7 @@ Item {
       }
 
       ColumnLayout {
-        y:295
+        y:335
         anchors.left: parent.left
         anchors.leftMargin: 5
 
@@ -386,7 +505,7 @@ Item {
                   }
                 }
           }
-}
+        }
 
 
 
